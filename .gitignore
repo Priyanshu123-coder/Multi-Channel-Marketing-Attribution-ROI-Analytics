@@ -1,0 +1,35 @@
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# IDE files
+.vscode/
+.idea/
+
+# Large binaries (>50MB safeguard)
+*.tar.gz
+*.zip
+*.7z
+*.mp4
+*.parquet
