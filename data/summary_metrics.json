@@ -1,0 +1,40 @@
+{
+  "client": "Grito Labs",
+  "domain": "EdTech Analytics",
+  "timeframe": "2026-01-01 to 2026-09-30",
+  "total_spend": 742905.1300000001,
+  "total_revenue": 4258621.0,
+  "total_conversions": 4879,
+  "unique_users": 25000,
+  "total_touchpoints": 59940,
+  "blended_roas": 5.73,
+  "blended_cac": 152.27,
+  "average_order_value": 872.85,
+  "projected_clv": 818.29,
+  "top_channels_by_roas": [
+    {
+      "channel": "Email",
+      "roas": 34.99
+    },
+    {
+      "channel": "Referral",
+      "roas": 4.14
+    },
+    {
+      "channel": "Paid Search",
+      "roas": 4.26
+    }
+  ],
+  "markov_baseline_conversion_rate": 19.52,
+  "budget_scenario_results": {
+    "current_spend": 742905.1299999999,
+    "new_spend": 715958.2585,
+    "current_revenue": 4258621.0,
+    "conservative_projected_revenue": 4526150.333333333,
+    "conservative_revenue_lift": 267529.3333333334,
+    "conservative_projected_roas": 6.32,
+    "optimistic_projected_revenue": 4641812.730583333,
+    "optimistic_revenue_lift": 383191.7305833333,
+    "optimistic_projected_roas": 6.48
+  }
+}
