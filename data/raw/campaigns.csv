@@ -1,0 +1,17 @@
+campaign_id,channel,name,start_date,end_date,objective
+CMP-PS-01,Paid Search,Brand Search Core,2026-01-01,2026-09-30,Conversion
+CMP-PS-02,Paid Search,NonBrand Analytics Bootcamp,2026-01-01,2026-09-30,Acquisition
+CMP-PS-03,Paid Search,NonBrand BI SQL Competitor,2026-01-01,2026-09-30,Acquisition
+CMP-SO-01,Paid Social,Meta Prospecting Video,2026-01-01,2026-09-30,Awareness
+CMP-SO-02,Paid Social,Meta Retargeting Testimonials,2026-01-01,2026-09-30,Conversion
+CMP-SO-03,Paid Social,LinkedIn B2B Upskilling,2026-01-01,2026-09-30,Lead Gen
+CMP-EM-01,Email,Welcome Nurture Flow,2026-01-01,2026-09-30,Nurturing
+CMP-EM-02,Email,Weekly Analytics Newsletter,2026-01-01,2026-09-30,Engagement
+CMP-EM-03,Email,Flash Promo Bootcamp Discount,2026-01-01,2026-09-30,Conversion
+CMP-OS-01,Organic Social,LinkedIn Founder Insights,2026-01-01,2026-09-30,Thought Leadership
+CMP-OS-02,Organic Social,YouTube Project Walkthroughs,2026-01-01,2026-09-30,Education
+CMP-OS-03,Organic Social,Community Discord Tips,2026-01-01,2026-09-30,Engagement
+CMP-RF-01,Referral,Alumni Ambassador Program,2026-01-01,2026-09-30,Advocacy
+CMP-RF-02,Referral,Partner Edtech Affiliate,2026-01-01,2026-09-30,Acquisition
+CMP-DP-01,Display,GDN Prospecting Banners,2026-01-01,2026-09-30,Awareness
+CMP-DP-02,Display,Programmatic Course Retargeting,2026-01-01,2026-09-30,Retargeting
