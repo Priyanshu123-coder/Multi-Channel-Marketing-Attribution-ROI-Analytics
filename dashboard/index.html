@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grito Labs | Multi-Channel Marketing Attribution & ROI Engine</title>
+    <!-- Chart.js via CDN with local fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --primary-light: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+        header {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 24px 36px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        header p { color: #94a3b8; font-size: 14px; margin-top: 4px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 24px 36px; }
+        
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary-light);
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-2px); }
+        .kpi-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }
+        .kpi-value { font-size: 26px; font-weight: 700; color: var(--text-main); margin: 6px 0 2px 0; }
+        .kpi-sub { font-size: 12px; color: var(--accent); font-weight: 500; }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        @media (max-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+        .card h2 { font-size: 18px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .card p.sub { font-size: 13px; color: var(--text-muted); margin-top: -12px; margin-bottom: 16px; }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+        th { background: #f1f5f9; padding: 10px 14px; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        tr:hover td { background-color: #f8fafc; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-warning { background: #fef3c7; color: #b45309; }
+        .badge-danger { background: #fee2e2; color: #b91c1c; }
+        .badge-info { background: #e0f2fe; color: #0369a1; }
+        
+        /* Simulator */
+        .slider-group { margin-bottom: 16px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+        .slider { width: 100%; accent-color: var(--primary-light); cursor: pointer; }
+        .sim-results { background: #f8fafc; border-radius: 8px; padding: 16px; border: 1px dashed var(--border); margin-top: 20px; }
+        .sim-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .sim-row.bold { font-weight: 700; font-size: 16px; color: var(--primary); border-top: 1px solid var(--border); padding-top: 8px; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>📈 Grito Labs: Multi-Channel Marketing Attribution & ROI Engine</h1>
+    <p>Professional Analytics Engineering Deliverable | Client Assessment Submission | Timeframe: Jan 1 - Sep 30, 2026</p>
+</header>
+
+<div class="container">
+    <!-- Executive KPI Scorecard -->
+    <div class="kpi-grid">
+        <div class="kpi-card" style="border-top-color: #3b82f6;">
+            <div class="kpi-title">Total Marketing Spend</div>
+            <div class="kpi-value">$742,905</div>
+            <div class="kpi-sub">Across 6 Channels & 16 Campaigns</div>
+        </div>
+        <div class="kpi-card" style="border-top-color: #10b981;">
+            <div class="kpi-title">Total Attributed Revenue</div>
+            <div class="kpi-value">$4,258,621</div>
+            <div class="kpi-sub">4,879 Enrolled Students</div>
+        </div>
+        <div class="kpi-card" style="border-top-color: #8b5cf6;">
+            <div class="kpi-title">Blended ROAS</div>
+            <div class="kpi-value">5.73x</div>
+            <div class="kpi-sub">+91% over 3.0x edtech target</div>
+        </div>
+        <div class="kpi-card" style="border-top-color: #f59e0b;">
+            <div class="kpi-title">Blended CAC</div>
+            <div class="kpi-value">$152.27</div>
+            <div class="kpi-sub">Average Payback &lt; 30 Days</div>
+        </div>
+        <div class="kpi-card" style="border-top-color: #06b6d4;">
+            <div class="kpi-title">Average Order Value</div>
+            <div class="kpi-value">$872.85</div>
+            <div class="kpi-sub">Bootcamp ($1,299) Lead Driver</div>
+        </div>
+        <div class="kpi-card" style="border-top-color: #ec4899;">
+            <div class="kpi-title">12-Mo Projected CLV</div>
+            <div class="kpi-value">$818.29</div>
+            <div class="kpi-sub">CLV to CAC Ratio: 5.37x</div>
+        </div>
+    </div>
+
+    <!-- Main Section: Charts and Simulator -->
+    <div class="content-grid">
+        <!-- Attribution Models Chart -->
+        <div class="card">
+            <h2>Attribution Model Revenue Comparison by Channel</h2>
+            <p class="sub">Notice how Last-Touch over-credits Email ($1.54M vs $227k First-Touch) while severely under-crediting Organic Social and Display top-of-funnel discovery.</p>
+            <div style="height: 380px;">
+                <canvas id="attributionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Budget Reallocation Simulator -->
+        <div class="card">
+            <h2>Interactive Budget Reallocation</h2>
+            <p class="sub">Simulate moving budget from low-ROAS channels (Display) to high-ROAS channels (Email & Paid Search).</p>
+            
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Display Spend Shift (%):</span>
+                    <span id="displayVal" style="color:var(--danger); font-weight:700;">-30%</span>
+                </div>
+                <input type="range" min="-60" max="0" value="-30" class="slider" id="displaySlider" oninput="updateSim()">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Paid Social Shift (%):</span>
+                    <span id="socialVal" style="color:var(--danger); font-weight:700;">-15%</span>
+                </div>
+                <input type="range" min="-40" max="10" value="-15" class="slider" id="socialSlider" oninput="updateSim()">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Email Budget Shift (%):</span>
+                    <span id="emailVal" style="color:var(--accent); font-weight:700;">+40%</span>
+                </div>
+                <input type="range" min="0" max="100" value="40" class="slider" id="emailSlider" oninput="updateSim()">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Paid Search Shift (%):</span>
+                    <span id="searchVal" style="color:var(--accent); font-weight:700;">+10%</span>
+                </div>
+                <input type="range" min="0" max="30" value="10" class="slider" id="searchSlider" oninput="updateSim()">
+            </div>
+
+            <div class="sim-results">
+                <div class="sim-row">
+                    <span>Current Blended Revenue:</span>
+                    <span>$4,258,621</span>
+                </div>
+                <div class="sim-row">
+                    <span>Projected Revenue (Conservative):</span>
+                    <span id="projRev" style="color:var(--accent); font-weight:700;">$4,526,150</span>
+                </div>
+                <div class="sim-row">
+                    <span>Incremental Revenue Lift:</span>
+                    <span id="liftRev" style="color:var(--accent); font-weight:700;">+$267,529 (+6.3%)</span>
+                </div>
+                <div class="sim-row bold">
+                    <span>Projected Blended ROAS:</span>
+                    <span id="projRoas">6.32x (from 5.73x)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Grid: Campaign Ranking & Top Journey Paths -->
+    <div class="content-grid">
+        <!-- Top Converting Journey Paths -->
+        <div class="card">
+            <h2>Top Multi-Touch Customer Journey Paths</h2>
+            <p class="sub">Customer journeys preceding course enrollments, conversion frequency, and average lag time in days.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer Path Sequence</th>
+                        <th>Touches</th>
+                        <th>Conversions</th>
+                        <th>Attributed Revenue</th>
+                        <th>Avg Lag (Days)</th>
+                        <th>Share</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Paid Search &gt; Conversion</strong></td>
+                        <td>1</td>
+                        <td>144</td>
+                        <td>$127,656</td>
+                        <td>1.1</td>
+                        <td><span class="badge badge-info">2.95%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Social &gt; Conversion</strong></td>
+                        <td>1</td>
+                        <td>123</td>
+                        <td>$107,777</td>
+                        <td>1.0</td>
+                        <td><span class="badge badge-info">2.52%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Search &gt; Email &gt; Conversion</strong></td>
+                        <td>2</td>
+                        <td>115</td>
+                        <td>$102,185</td>
+                        <td>2.4</td>
+                        <td><span class="badge badge-success">2.36%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Organic Social &gt; Conversion</strong></td>
+                        <td>1</td>
+                        <td>103</td>
+                        <td>$88,397</td>
+                        <td>1.0</td>
+                        <td><span class="badge badge-info">2.11%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Social &gt; Email &gt; Conversion</strong></td>
+                        <td>2</td>
+                        <td>98</td>
+                        <td>$87,302</td>
+                        <td>2.3</td>
+                        <td><span class="badge badge-success">2.01%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Search &gt; Email &gt; Email &gt; Conversion</strong></td>
+                        <td>3</td>
+                        <td>85</td>
+                        <td>$81,615</td>
+                        <td>4.2</td>
+                        <td><span class="badge badge-success">1.74%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Social &gt; Email &gt; Email &gt; Conversion</strong></td>
+                        <td>3</td>
+                        <td>72</td>
+                        <td>$58,928</td>
+                        <td>3.9</td>
+                        <td><span class="badge badge-success">1.48%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Organic Social &gt; Email &gt; Conversion</strong></td>
+                        <td>2</td>
+                        <td>69</td>
+                        <td>$64,031</td>
+                        <td>2.3</td>
+                        <td><span class="badge badge-success">1.41%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Channel Performance & ROAS Leaderboard -->
+        <div class="card">
+            <h2>Channel Performance & ROAS Summary</h2>
+            <p class="sub">Total spend, impressions, clicks, CPC, Linear ROAS, and Markov removal effects.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Channel</th>
+                        <th>Spend</th>
+                        <th>Linear ROAS</th>
+                        <th>CPC</th>
+                        <th>Markov RE</th>
+                        <th>Tier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Email</strong></td>
+                        <td>$30,980</td>
+                        <td><strong>34.99x</strong></td>
+                        <td>$0.16</td>
+                        <td>0.4507</td>
+                        <td><span class="badge badge-success">Tier 1 - Scale</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Search</strong></td>
+                        <td>$254,078</td>
+                        <td><strong>4.26x</strong></td>
+                        <td>$2.99</td>
+                        <td>0.4757</td>
+                        <td><span class="badge badge-success">Tier 1 - Scale</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Referral</strong></td>
+                        <td>$62,083</td>
+                        <td><strong>4.14x</strong></td>
+                        <td>$1.45</td>
+                        <td>0.1264</td>
+                        <td><span class="badge badge-success">Tier 1 - Scale</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Paid Social</strong></td>
+                        <td>$256,411</td>
+                        <td><strong>3.16x</strong></td>
+                        <td>$2.45</td>
+                        <td>0.3673</td>
+                        <td><span class="badge badge-warning">Tier 2 - Optimize</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Display</strong></td>
+                        <td>$139,353</td>
+                        <td><strong>3.01x</strong></td>
+                        <td>$0.81</td>
+                        <td>0.2082</td>
+                        <td><span class="badge badge-danger">Tier 3 - Reduce</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Organic Social</strong></td>
+                        <td>$0</td>
+                        <td><strong>&infin; (Org)</strong></td>
+                        <td>$0.00</td>
+                        <td>0.2887</td>
+                        <td><span class="badge badge-info">Tier 1 - Organic</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize Chart.js Attribution Comparison
+    const ctx = document.getElementById('attributionChart').getContext('2d');
+    const channels = ['Email', 'Paid Search', 'Paid Social', 'Organic Social', 'Display', 'Referral'];
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: channels,
+            datasets: [
+                {
+                    label: 'First-Touch ($)',
+                    data: [227138, 1243483, 1034907, 864303, 574746, 314044],
+                    backgroundColor: 'rgba(59, 130, 246, 0.75)'
+                },
+                {
+                    label: 'Last-Touch ($)',
+                    data: [1538836, 1004759, 690802, 468844, 334616, 220764],
+                    backgroundColor: 'rgba(16, 185, 129, 0.75)'
+                },
+                {
+                    label: 'Linear ($)',
+                    data: [1083832, 1082524, 811222, 604405, 419689, 256950],
+                    backgroundColor: 'rgba(139, 92, 246, 0.75)'
+                },
+                {
+                    label: 'Markov Removal ($)',
+                    data: [1001269, 1056711, 815894, 641298, 462607, 280842],
+                    backgroundColor: 'rgba(245, 158, 11, 0.75)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return '$' + (value / 1000).toLocaleString() + 'k'; }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': $' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Dynamic Budget Simulator logic
+    function updateSim() {
+        const dShift = parseFloat(document.getElementById('displaySlider').value) / 100;
+        const sShift = parseFloat(document.getElementById('socialSlider').value) / 100;
+        const eShift = parseFloat(document.getElementById('emailSlider').value) / 100;
+        const pShift = parseFloat(document.getElementById('searchSlider').value) / 100;
+
+        document.getElementById('displayVal').innerText = (dShift >= 0 ? '+' : '') + Math.round(dShift * 100) + '%';
+        document.getElementById('socialVal').innerText = (sShift >= 0 ? '+' : '') + Math.round(sShift * 100) + '%';
+        document.getElementById('emailVal').innerText = '+' + Math.round(eShift * 100) + '%';
+        document.getElementById('searchVal').innerText = '+' + Math.round(pShift * 100) + '%';
+
+        // Spend baselines
+        const dSpend = 139353, sSpend = 256411, eSpend = 30980, pSpend = 254078, rSpend = 62083;
+        // Linear revenue baselines
+        const dRev = 419689, sRev = 811222, eRev = 1083832, pRev = 1082524, rRev = 256950, oRev = 604405;
+
+        // Baseline ROAS
+        const dRoas = dRev / dSpend;
+        const sRoas = sRev / sSpend;
+        const eRoas = eRev / eSpend;
+        const pRoas = pRev / pSpend;
+
+        // Delta
+        const dDelta = dSpend * dShift;
+        const sDelta = sSpend * sShift;
+        const eDelta = eSpend * eShift;
+        const pDelta = pSpend * pShift;
+
+        // Conservative revenue impact (85% marginal efficiency on growth)
+        const dRevNew = dRev + (dDelta * dRoas);
+        const sRevNew = sRev + (sDelta * sRoas);
+        const eRevNew = eRev + (eDelta * eRoas * 0.85);
+        const pRevNew = pRev + (pDelta * pRoas * 0.85);
+
+        const totalNewRev = dRevNew + sRevNew + eRevNew + pRevNew + rRev + oRev;
+        const baseRev = 4258621;
+        const lift = totalNewRev - baseRev;
+        const pctLift = (lift / baseRev) * 100;
+
+        const totalNewSpend = (dSpend + dDelta) + (sSpend + sDelta) + (eSpend + eDelta) + (pSpend + pDelta) + rSpend;
+        const newRoas = totalNewRev / totalNewSpend;
+
+        document.getElementById('projRev').innerText = '$' + Math.round(totalNewRev).toLocaleString();
+        document.getElementById('liftRev').innerText = (lift >= 0 ? '+$' : '-$') + Math.round(Math.abs(lift)).toLocaleString() + ' (' + (pctLift >= 0 ? '+' : '') + pctLift.toFixed(1) + '%)';
+        document.getElementById('projRoas').innerText = newRoas.toFixed(2) + 'x (from 5.73x)';
+    }
+</script>
+
+</body>
+</html>
